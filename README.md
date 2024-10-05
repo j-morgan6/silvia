@@ -1,9 +1,9 @@
-Nerves + LiveView Example
+Silvia
 ===
 
-This example shows a Nerves Project with a Pheonix/LiveView server embedded in the same application.  In contrast to
-a [poncho project](https://embedded-elixir.com/post/2017-05-19-poncho-projects/), there is only one application
-supervision tree containing the Phoenix Endpoint and any processes running on the device.
+This project contains my mods for a Rancilio Silvia espresso machine.
+
+This project is using Nerves and Phoenix LiveView.
 
 Currently the versions included are:
 
@@ -71,32 +71,4 @@ specify the network name and password, they must be set as environment variables
 If they are not specified, a warning will be printed when building firmware, which either
 gives you a chance to stop the build and add the environment variables or a clue as to 
 why you are no longer able to access the device over WiFi.
-
-
-Making It Your Own
----
-
-To use this project as a start for your own Nerves/LiveView project, first replace the following strings throughout the project:
-
-* `HelloLiveView` -> `YourAppName`
-* `hello_live_view` -> `your_app_name`
-
-```bash
-# Might be necessary in MacOS to avoid a sed "illegal byte sequence" error
-# export LC_CTYPE=C 
-# export LANG=C
-
-find . -type f \( -iname "*.ex*" ! -path "./deps/*" ! -path "./_build/*" \) -print0 | xargs -0 sed -i '' -e 's/HelloLiveView/YourAppName/g'
-find . -type f \( -iname "*.ex*" ! -path "./deps/*" ! -path "./_build/*" \) -print0 | xargs -0 sed -i '' -e 's/hello_live_view/your_app_name/g'
-sed -i '' 's/hello_live_view/your_app_name/g' ./scripts/deploy.sh
-```
-
-Then rename the files and directories in lib:
-
-```bash
-mv lib/hello_live_view lib/your_app_name
-mv lib/hello_live_view_web lib/your_app_name_web
-mv lib/hello_live_view.ex lib/your_app_name.ex
-mv liv/hello_live_view_web.ex lib/your_app_name_web.ex
-```
 
