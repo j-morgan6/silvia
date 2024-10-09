@@ -57,7 +57,7 @@ over ssh.
 # If you want to enable wifi:
 # export NERVES_SSID="NetworkName" && export NERVES_PSK="password"
 MIX_ENV=prod MIX_TARGET=host mix do deps.get, assets.deploy
-MIX_ENV=prod MIX_TARGET=rpi0 mix do deps.get, firmware, upload your_app_name.local
+MIX_ENV=prod MIX_TARGET=rpi0 mix do deps.get, firmware, upload silvia.local
 ```
 
 
