@@ -39,3 +39,7 @@ npm-debug.log
 silvia.iml
 
 .DS_Store
+/upload.sh
+
+# removing the generated assets
+*.gz
