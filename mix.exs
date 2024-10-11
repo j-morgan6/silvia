@@ -74,6 +74,9 @@ defmodule Silvia.MixProject do
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.13.0"},
       {:nerves_pack, "~> 0.7.0", targets: @all_targets},
+      {:vintage_net_wizard, "~> 0.4"},
+
+      # Dependencies for NervesHub
       {:nerves_hub_link, "~> 2.2"},
       {:nerves_hub_cli, "~> 2.0"},
 

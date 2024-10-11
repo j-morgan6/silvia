@@ -7,7 +7,10 @@ defmodule Silvia.WifiWizard do
   @doc false
   def setup_wifi_if_necessary() do
     unless network_configured?() do
-      vintage_net_wizard().run_wizard(on_exit: {__MODULE__, :on_wizard_exit, []})
+      vintage_net_wizard().run_wizard(
+        on_exit: {__MODULE__, :on_wizard_exit, []},
+        ui: [title: "Silvia WiFi Wizard"]
+      )
     end
   end
 

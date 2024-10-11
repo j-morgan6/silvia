@@ -11,6 +11,8 @@ defmodule Silvia.Application do
   def start(_type, _args) do
     Logger.info("[#{inspect(__MODULE__)}] starting Silvia Application")
 
+    Silvia.WifiWizard.setup_wifi_if_necessary()
+
     children =
       [
         # Start the Telemetry supervisor
@@ -26,6 +28,7 @@ defmodule Silvia.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Silvia.Supervisor]
+    Logger.info("[#{inspect(__MODULE__)}] starting Silvia Supervisor")
     Supervisor.start_link(children, opts)
   end
 

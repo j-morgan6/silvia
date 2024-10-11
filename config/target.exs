@@ -53,43 +53,9 @@ if keys == [],
 config :nerves_ssh,
   authorized_keys: Enum.map(keys, &File.read!/1)
 
-ssid = System.get_env("NERVES_SSID")
-psk = System.get_env("NERVES_PSK")
-
-if !(ssid && psk) do
-  IO.puts("""
-  \n!!! No WiFi configuration set !!!
-    - If you will access this device over WiFi, please set the appropriate connecting information in `NERVES_SSID` and `NERVES_PSK` environmental variables."
-    - If you are not accessing this device over WiFi, you can ignore this message.
-  """)
-end
-
-# Configure the network using vintage_net
-# See https://github.com/nerves-networking/vintage_net for more information
-config :vintage_net,
-  regulatory_domain: "US",
-  config: [
-    {"usb0", %{type: VintageNetDirect}},
-    {"eth0",
-     %{
-       type: VintageNetEthernet,
-       ipv4: %{method: :dhcp}
-     }},
-    {"wlan0",
-     %{
-       type: VintageNetWiFi,
-       vintage_net_wifi: %{
-         networks: [
-           %{
-             key_mgmt: :wpa_psk,
-             ssid: ssid,
-             psk: psk
-           }
-         ]
-       },
-       ipv4: %{method: :dhcp}
-     }}
-  ]
+config :vintage_net_wizard,
+  ssid: "hello_silvia",
+  dns_name: "hello_silvia.config"
 
 config :mdns_lite,
   # The `hosts` key specifies what hostnames mdns_lite advertises.  `:hostname`
