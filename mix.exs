@@ -72,8 +72,10 @@ defmodule Silvia.MixProject do
       {:toolshed, "~> 0.4.0"},
 
       # Dependencies for all targets except :host
-      {:nerves_runtime, "~> 0.13.0", targets: @all_targets},
+      {:nerves_runtime, "~> 0.13.0"},
       {:nerves_pack, "~> 0.7.0", targets: @all_targets},
+      {:nerves_hub_link, "~> 2.2"},
+      {:nerves_hub_cli, "~> 2.0"},
 
       # Dependencies for specific targets
       # NOTE: It's generally low risk and recommended to follow minor version
