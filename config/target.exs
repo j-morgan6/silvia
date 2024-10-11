@@ -1,5 +1,8 @@
 import Config
 
+config :silvia, vintage_net: VintageNet
+config :silvia, vintage_net_wizard: VintageNetWizard
+
 config :silvia, SilviaWeb.Endpoint,
   # Code Reloader and watchers cannot be used on target
   code_reloader: false,
@@ -118,6 +121,24 @@ config :mdns_lite,
       port: 4369
     }
   ]
+
+################################################################
+## NervesHub Config
+################################################################
+config :nerves_hub_link,
+  host: "devices.nervescloud.com",
+  shared_secret: [
+    product_key: "nhp_12jyM4AgC95FWMTBe3T1uULB5GG6afJy0a9AD0aXIWA",
+    product_secret: "AUDF/K0kKvruV8nWNTGWg7B4Qpsoj1OM7BCfeBXtjWw",
+  ]
+
+config :nerves_hub_link, remote_iex: true
+
+config :nerves_hub_cli,
+  scheme: "https",
+  host: "manage.nervescloud.com"
+
+
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

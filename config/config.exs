@@ -67,22 +67,6 @@ config :nerves, source_date_epoch: "1672328776"
 
 
 ################################################################
-## NervesHub Config
-################################################################
-config :nerves_hub_link,
-  host: "devices.nervescloud.com",
-  shared_secret: [
-    product_key: "nhp_12jyM4AgC95FWMTBe3T1uULB5GG6afJy0a9AD0aXIWA",
-    product_secret: "AUDF/K0kKvruV8nWNTGWg7B4Qpsoj1OM7BCfeBXtjWw",
-  ]
-
-config :nerves_hub_link, remote_iex: true
-
-config :nerves_hub_cli,
-  scheme: "https",
-  host: "manage.nervescloud.com"
-
-################################################################
 ## Common Config
 ################################################################
 
