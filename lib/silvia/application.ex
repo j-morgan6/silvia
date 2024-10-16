@@ -20,9 +20,11 @@ defmodule Silvia.Application do
         # Start the PubSub system
         {Phoenix.PubSub, name: Silvia.PubSub},
         # Start the Endpoint (http/https)
-        SilviaWeb.Endpoint
+        SilviaWeb.Endpoint,
         # Start a worker by calling: Silvia.Worker.start_link(arg)
         # {Silvia.Worker, arg}
+
+        Silvia.WifiChecker
       ] ++ children(target())
 
     # See https://hexdocs.pm/elixir/Supervisor.html
