@@ -1,5 +1,9 @@
 import Config
 
+config :silvia, vintage_net: VintageNet
+config :silvia, vintage_net_wizard: VintageNetWizard
+
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

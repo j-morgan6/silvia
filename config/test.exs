@@ -1,5 +1,9 @@
 import Config
 
+# Used when running locally - running tests
+config :silvia, vintage_net: Fake.VintageNet
+config :silvia, vintage_net_wizard: Fake.VintageNetWizard
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :silvia, SilviaWeb.Endpoint,
