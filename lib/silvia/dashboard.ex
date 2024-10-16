@@ -20,6 +20,10 @@ defmodule Silvia.Dashboard do
     GenServer.cast(@me, {:steam_temperature, temp})
   end
 
+  def wifi_status(status) do
+    GenServer.cast(@me, {:wifi_status, status})
+  end
+
   def dashboard_info() do
     GenServer.call(@me, :dashboard_info)
   end
@@ -30,7 +34,8 @@ defmodule Silvia.Dashboard do
       %{
         temperature: Enum.random(94..96),
         brew_temperature: Enum.random(92..98),
-        steam_temperature: Enum.random(135..145)
+        steam_temperature: Enum.random(135..145),
+        wifi_status: :starting
       }
     }
   end
@@ -48,6 +53,11 @@ defmodule Silvia.Dashboard do
   def handle_cast({:steam_temperature, temp}, state) do
     Logger.info("[#{inspect(@me)}] steam temperature: #{inspect(temp)}")
     {:noreply, %{state | steam_temperature: temp}}
+  end
+
+  def handle_cast({:wifi_status, {conn, ssid} = _wifi_status}, state) do
+    Logger.info("[#inspect(@me] wifi status: connection #{conn}, ssid #{ssid}")
+    {:noreply, %{state | wifi_status: conn}}
   end
 
   def handle_call(:dashboard_info, _from, state) do

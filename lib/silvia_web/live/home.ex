@@ -75,6 +75,10 @@ defmodule SilviaWeb.Home do
           <img src="/images/up.svg" />
         </button>
       </div>
+
+      <div>
+        Wifi Status: <%= @wifi_status %>
+      </div>
     </.body>
     """
   end
@@ -94,7 +98,8 @@ defmodule SilviaWeb.Home do
     assign(socket,
       temperature: dashboard.temperature,
       brew_temperature: dashboard.brew_temperature,
-      steam_temperature: dashboard.steam_temperature
+      steam_temperature: dashboard.steam_temperature,
+      wifi_status: dashboard.wifi_status
     )
   end
 

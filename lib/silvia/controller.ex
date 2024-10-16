@@ -2,6 +2,8 @@ defmodule Silvia.Controller do
   use GenServer
   require Logger
 
+  alias Silvia.Dashboard
+
   @me __MODULE__
 
   def start_link(_) do
@@ -46,6 +48,7 @@ defmodule Silvia.Controller do
 
   def handle_cast({:wifi, wifi_status}, state) do
     Logger.info("[#{inspect(@me)}] wifi: #{inspect(wifi_status)}")
+    Dashboard.wifi_status(wifi_status)
     {:noreply, %{state | wifi_status: wifi_status}}
   end
 
