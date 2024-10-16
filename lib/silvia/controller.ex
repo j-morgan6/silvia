@@ -44,7 +44,7 @@ defmodule Silvia.Controller do
     {:noreply, %{state | temperature: temp}}
   end
 
-  def handle_cast({:wifi, {conn, ssid} = wifi_status}, state) do
+  def handle_cast({:wifi, wifi_status}, state) do
     Logger.info("[#{inspect(@me)}] wifi: #{inspect(wifi_status)}")
     {:noreply, %{state | wifi_status: wifi_status}}
   end

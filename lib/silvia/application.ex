@@ -25,7 +25,8 @@ defmodule Silvia.Application do
         # {Silvia.Worker, arg}
 
         Silvia.Controller,
-        Silvia.WifiChecker
+        Silvia.WifiChecker,
+        Silvia.Dashboard
       ] ++ children(target())
 
     # See https://hexdocs.pm/elixir/Supervisor.html

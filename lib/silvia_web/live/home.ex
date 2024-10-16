@@ -90,10 +90,11 @@ defmodule SilviaWeb.Home do
   end
 
   defp assign_values(socket) do
+    dashboard = Dashboard.dashboard_info()
     assign(socket,
-      temperature: Dashboard.temperature(),
-      brew_temperature: Dashboard.brew_temperature(),
-      steam_temperature: Dashboard.steam_temperature()
+      temperature: dashboard.temperature,
+      brew_temperature: dashboard.brew_temperature,
+      steam_temperature: dashboard.steam_temperature
     )
   end
 
