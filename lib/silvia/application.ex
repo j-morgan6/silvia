@@ -24,6 +24,7 @@ defmodule Silvia.Application do
         # Start a worker by calling: Silvia.Worker.start_link(arg)
         # {Silvia.Worker, arg}
 
+        Silvia.Controller,
         Silvia.WifiChecker
       ] ++ children(target())
 

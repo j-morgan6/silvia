@@ -2,6 +2,7 @@ defmodule Silvia.WifiChecker do
   use GenServer
   require Logger
   alias Silvia.WifiWizard
+  alias Silvia.Controller
 
   @me __MODULE__
   @connected_frequency 60_000
@@ -21,7 +22,7 @@ defmodule Silvia.WifiChecker do
 
     wifi_status = wifi_status()
     Process.send_after(self(), :check_wifi, delay(wifi_status))
-#    Controller.wifi(wifi_status)
+    Controller.wifi(wifi_status)
 
     {:noreply, :ok}
   end
