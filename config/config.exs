@@ -75,6 +75,18 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+
+################################################################
+## NervesHub Config
+################################################################
+config :nerves_hub_link,
+  host: "devices.nervescloud.com",
+  shared_secret: [
+    product_key: "nhp_12jyM4AgC95FWMTBe3T1uULB5GG6afJy0a9AD0aXIWA",
+    product_secret: "AUDF/K0kKvruV8nWNTGWg7B4Qpsoj1OM7BCfeBXtjWw",
+  ]
+
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
