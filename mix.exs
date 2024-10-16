@@ -11,6 +11,7 @@ defmodule Silvia.MixProject do
   def project do
     [
       app: @app,
+      name: "Silvia",
       version: @version,
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),

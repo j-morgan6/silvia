@@ -104,7 +104,8 @@ config :nerves_hub_cli,
   scheme: "https",
   host: "manage.nervescloud.com"
 
-
+config :nerves_hub,
+  public_keys: [:devkey, :tangokey]
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
