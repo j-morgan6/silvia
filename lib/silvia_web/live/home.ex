@@ -1,12 +1,13 @@
 defmodule SilviaWeb.Home do
   use SilviaWeb, :live_view
 
+  alias Silvia.Controller
   alias Silvia.Dashboard
 
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
-      :timer.send_interval(5000, self(), :tick)
+      :timer.send_interval(5_000, self(), :tick)
     end
 
     {:ok, assign_values(socket)}
@@ -20,6 +21,34 @@ defmodule SilviaWeb.Home do
   @impl true
   def handle_info(:tick, socket) do
     {:noreply, assign_values(socket)}
+  end
+
+  @impl true
+  def handle_event("brew-down", _, socket) do
+    socket = update(socket, :brew_temperature, &(&1 - 1))
+    Controller.brew_temperature(socket.assigns.brew_temperature)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("brew-up", _, socket) do
+    socket = update(socket, :brew_temperature, &(&1 + 1))
+    Controller.brew_temperature(socket.assigns.brew_temperature)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("steam-down", _, socket) do
+    socket = update(socket, :steam_temperature, &(&1 - 1))
+    Controller.steam_temperature(socket.assigns.steam_temperature)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("steam-up", _, socket) do
+    socket = update(socket, :steam_temperature, &(&1 + 1))
+    Controller.steam_temperature(socket.assigns.steam_temperature)
+    {:noreply, socket}
   end
 
   defp assign_values(socket) do

@@ -36,10 +36,10 @@
         <%= @brew_temperature %>C
       </span>
     </div>
-    <button>
+    <button phx-click="brew-down">
       <img src="/images/down.svg" />
     </button>
-    <button>
+    <button phx-click="brew-up">
       <img src="/images/up.svg" />
     </button>
   </div>
@@ -51,10 +51,10 @@
         <%= @steam_temperature %>C
       </span>
     </div>
-    <button>
+    <button phx-click="steam-down">
       <img src="/images/down.svg" />
     </button>
-    <button>
+    <button phx-click="steam-up">
       <img src="/images/up.svg" />
     </button>
   </div>

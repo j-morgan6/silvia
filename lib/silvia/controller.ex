@@ -22,13 +22,21 @@ defmodule Silvia.Controller do
     GenServer.cast(@me, {:temperature, temp})
   end
 
+  def brew_temperature(temp) do
+    GenServer.cast(@me, {:brew_temperature, temp})
+  end
+
+  def steam_temperature(temp) do
+    GenServer.cast(@me, {:steam_temperature, temp})
+  end
+
   def wifi(wifi_status) do
     GenServer.cast(@me, {:wifi, wifi_status})
   end
 
   def init(:noargs) do
     Logger.info("[#{inspect(@me)}] starting Controller GenServer")
-    {:ok, %{temperature: 0.0, wifi_status: {:starting, ""}}}
+    {:ok, %{}}
   end
 
   def handle_cast({:info, text}, state) do
@@ -41,15 +49,27 @@ defmodule Silvia.Controller do
     {:noreply, state}
   end
 
-  def handle_cast({:temperature, temp}, %{temperature: _prev_temp} = state) do
+  def handle_cast({:temperature, temp}, state) do
     Logger.info("[#{inspect(@me)}] temperature: #{inspect(temp)}")
-    {:noreply, %{state | temperature: temp}}
+    {:noreply, state}
+  end
+
+  def handle_cast({:brew_temperature, temp}, state) do
+    Logger.info("[#{inspect(@me)}] brew_temperature: #{inspect(temp)}")
+    Dashboard.brew_temperature(temp)
+    {:noreply, state}
+  end
+
+  def handle_cast({:steam_temperature, temp}, state) do
+    Logger.info("[#{inspect(@me)}] steam_temperature: #{inspect(temp)}")
+    Dashboard.steam_temperature(temp)
+    {:noreply, state}
   end
 
   def handle_cast({:wifi, wifi_status}, state) do
     Logger.info("[#{inspect(@me)}] wifi: #{inspect(wifi_status)}")
     Dashboard.wifi_status(wifi_status)
-    {:noreply, %{state | wifi_status: wifi_status}}
+    {:noreply, state}
   end
 
 end
