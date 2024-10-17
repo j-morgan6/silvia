@@ -9,10 +9,10 @@ defmodule Silvia.WifiChecker do
   @disconnected_frequency 10_000
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, :no_args, name: @me)
+    GenServer.start_link(__MODULE__, :noargs, name: @me)
   end
 
-  def init(:no_args) do
+  def init(:noargs) do
     Logger.info("[#{inspect(@me)}] starting WifiChecker GenServer")
     Process.send_after(self(), :check_wifi, 2_000)
     {:ok, :ok}

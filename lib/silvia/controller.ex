@@ -51,6 +51,7 @@ defmodule Silvia.Controller do
 
   def handle_cast({:temperature, temp}, state) do
     Logger.info("[#{inspect(@me)}] temperature: #{inspect(temp)}")
+    Dashboard.temperature(temp)
     {:noreply, state}
   end
 

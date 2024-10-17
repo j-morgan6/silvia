@@ -26,6 +26,7 @@ defmodule Silvia.Application do
 
         Silvia.Controller,
         Silvia.WifiChecker,
+        Silvia.BoilerTemperature,
         Silvia.Dashboard
       ] ++ children(target())
 
