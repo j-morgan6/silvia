@@ -86,6 +86,10 @@ config :nerves_hub_link,
     product_secret: "AUDF/K0kKvruV8nWNTGWg7B4Qpsoj1OM7BCfeBXtjWw",
   ]
 
+config :nerves_hub_cli,
+  scheme: "https",
+  host: "manage.nervescloud.com"
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

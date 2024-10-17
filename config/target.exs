@@ -93,10 +93,6 @@ config :mdns_lite,
 ################################################################
 config :nerves_hub_link, remote_iex: true
 
-config :nerves_hub_cli,
-  scheme: "https",
-  host: "manage.nervescloud.com"
-
 config :nerves_hub,
   public_keys: [:devkey, :tangokey]
 
