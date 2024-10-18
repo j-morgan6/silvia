@@ -4,9 +4,11 @@ defmodule SilviaWeb.Home do
   alias Silvia.Controller
   alias Silvia.Dashboard
 
+  @refresh_frequency 2_000
+
   def mount(_params, _session, socket) do
     if connected?(socket) do
-      :timer.send_interval(5_000, self(), :tick)
+      :timer.send_interval(@refresh_frequency, self(), :tick)
     end
 
     {:ok, assign_values(socket)}
