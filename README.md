@@ -45,4 +45,5 @@ Roadmap
 The next few steps are:
 * Get the heat sensor (TSIC 306) working so we can detect the heat of the boiler
 * Insulate the boiler on the physical machine
+* Work on the UI for the Dashboard
  
