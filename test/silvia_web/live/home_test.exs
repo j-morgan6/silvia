@@ -11,8 +11,10 @@ defmodule SilviaWeb.HomeTest do
 
   test "should display the current temperature", %{conn: conn} do
     Dashboard.temperature(100)
-    {:ok, _view, html} = live(conn, "/")
-    assert html =~ "<span class=\"value\">\n100C\n"
+    {:ok, view, _html} = live(conn, "/")
+    assert view
+      |> element("#current_temperature")
+      |> render =~ "100C"
   end
 
   test "should increase the brew temperature", %{conn: conn} do
@@ -48,8 +50,6 @@ defmodule SilviaWeb.HomeTest do
   end
 
   defp dashboard_info() do
-    Dashboard.temperature(100)
-    IO.puts ("***** temperature is #{Dashboard.dashboard_info().temperature}")
     Dashboard.dashboard_info()
   end
 end
