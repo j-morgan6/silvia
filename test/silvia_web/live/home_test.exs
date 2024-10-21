@@ -4,7 +4,7 @@ defmodule SilviaWeb.HomeTest do
 
   alias Silvia.Dashboard
 
-  test "disconnected and connected mount", %{conn: conn} do
+  test "should load the dashboard", %{conn: conn} do
     conn = get(conn, "/")
     assert html_response(conn, 200) =~ "Dashboard"
   end
