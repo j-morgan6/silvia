@@ -71,6 +71,7 @@ defmodule Silvia.MixProject do
       {:shoehorn, "~> 0.9.1"},
       {:ring_logger, "~> 0.11.0"},
       {:toolshed, "~> 0.4.0"},
+      {:circuits_gpio, "~> 2.1"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.13.0"},
