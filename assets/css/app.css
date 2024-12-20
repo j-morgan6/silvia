@@ -35,21 +35,21 @@ h3 {
   @apply block text-5xl font-extrabold text-indigo-600;
 }
 
-#set_temperature {
+.set_temperature {
   @apply mt-8 max-w-xl mx-auto text-center;
 }
-#set_temperature .meter {
+.set_temperature .meter {
   @apply flex h-12 overflow-hidden text-base bg-slate-300 rounded-lg mb-8;
 }
-#set_temperature .meter > span {
+.set_temperature .meter > span {
   @apply flex flex-col justify-center text-slate-900 text-center whitespace-nowrap bg-yellow-300 font-bold w-0;
   transition: width 2s ease;
 }
-#set_temperature button {
+.set_temperature button {
   @apply bg-transparent mx-1 py-2 px-4 border-slate-400 border-2 rounded-lg shadow-sm transition ease-in-out duration-150 outline-none hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
-#set_temperature img,
-#set_temperature svg {
+.set_temperature img,
+.set_temperature svg {
   @apply w-8;
 }

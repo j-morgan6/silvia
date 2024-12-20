@@ -4,7 +4,7 @@
     <div class="info">
       <div class="datapoint">
         <span class="value" id="current_temperature">
-          <%= @temperature %>C
+          { @temperature }C
         </span>
         <span class="label">
           Current Temperature
@@ -12,7 +12,7 @@
       </div>
       <div class="datapoint">
         <span class="value">
-          <%= @brew_temperature %>C
+          { @brew_temperature }C
         </span>
         <span class="label">
           Brew Temperature
@@ -20,7 +20,7 @@
       </div>
       <div class="datapoint">
         <span class="value">
-          <%= @steam_temperature %>C
+          { @steam_temperature }C
         </span>
         <span class="label">
           Steam Temperature
@@ -29,11 +29,11 @@
     </div>
   </div>
 
-  <div id="set_temperature">
+  <div class="set_temperature">
     <h2>Set Brew Temperature</h2>
     <div class="meter">
       <span style={"width: #{(100-(98-@brew_temperature)*(100/6))}%; background: #F1C40D"}>
-        <%= @brew_temperature %>C
+        { @brew_temperature }C
       </span>
     </div>
     <button phx-click="brew-down">
@@ -44,11 +44,11 @@
     </button>
   </div>
 
-  <div id="set_temperature">
+  <div class="set_temperature">
     <h2>Set Steam Temperature</h2>
     <div class="meter">
       <span style={"width: #{(100-(145-@steam_temperature)*10)}%; background: #99CCFF"}>
-        <%= @steam_temperature %>C
+        { @steam_temperature }C
       </span>
     </div>
     <button phx-click="steam-down">
@@ -60,6 +60,6 @@
   </div>
 
   <div>
-    Wifi Status: <%= @wifi_status %>
+    Wifi Status: { @wifi_status }
   </div>
 </.body>
