@@ -7,10 +7,10 @@ This project is using Nerves and Phoenix LiveView.
 
 Currently the versions included are:
 
-* `nerves`  - 1.9.3
-* `phoenix`  - 1.7.2
-* `phoenix_liveview` - 0.18.18
-* `tailwindcss` - 0.2.0
+* `nerves`  - 1.11.1
+* `phoenix`  - 1.7.18
+* `phoenix_liveview` - 1.0.1
+* `tailwindcss` - 0.2.3
 
 
 Configuration
@@ -44,6 +44,9 @@ Roadmap
 
 The next few steps are:
 * Get the heat sensor (TSIC 306) working so we can detect the heat of the boiler
+* Introduce the relay to control the heating element (get it working)
+* Introduce the PID (pid_controller) library and understand how it works
 * Insulate the boiler on the physical machine
+* Implement the PID
 * Work on the UI for the Dashboard
  
