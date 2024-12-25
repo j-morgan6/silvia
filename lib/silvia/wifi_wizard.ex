@@ -16,7 +16,7 @@ defmodule Silvia.WifiWizard do
 
   @doc false
   def on_wizard_exit() do
-    Logger.info("[Silvia] - WiFi Wizard stopped")
+    Logger.notice("[Silvia] - WiFi Wizard stopped")
   end
 
 
@@ -46,7 +46,7 @@ defmodule Silvia.WifiWizard do
          true <- has_networks?() || :no_networks do
       # By this point we know there is a wlan interface available
       # and already configured with networks.
-      Logger.info("[#{inspect(__MODULE__)}] Wifi is configured so will not start the wizard!")
+      Logger.notice("[#{inspect(__MODULE__)}] Wifi is configured so will not start the wizard!")
       true
     else
       status ->
@@ -73,7 +73,7 @@ defmodule Silvia.WifiWizard do
         :no_networks -> "WiFi was configured without any networks"
       end
 
-    Logger.info("[#{inspect(__MODULE__)}] #{msg} - Starting WiFi Wizard")
+    Logger.notice("[#{inspect(__MODULE__)}] #{msg} - Starting WiFi Wizard")
   end
 
   defp networks() do

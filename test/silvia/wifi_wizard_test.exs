@@ -165,7 +165,7 @@ defmodule Silvia.WifiWizardTest do
         def configured_interfaces(), do: []
       end
       defmodule Wizard do
-        def run_wizard(_opts), do: Logger.info("Starting Wizard")
+        def run_wizard(_opts), do: Logger.notice("Starting Wizard")
       end
       set_vintage_net_fake(NeedWizard)
       set_vintage_net_wizard_fake(Wizard)
