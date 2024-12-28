@@ -17,7 +17,7 @@ defmodule SilviaWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import SilviaWeb.Gettext
+  use Gettext, backend: SilviaWeb.Gettext
 
   @doc """
   Renders a modal.
