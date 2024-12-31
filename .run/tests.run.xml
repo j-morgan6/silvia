@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="tests" type="MixExUnitRunConfigurationType" factoryName="Elixir Mix ExUnit">
+    <module name="silvia" />
+    <working-directory url="file://$PROJECT_DIR$" />
+    <envs>
+      <env name="MIX_ENV" value="test" />
+      <env name="MIX_TARGET" value="host" />
+    </envs>
+    <module name="silvia" />
+    <module-filters inherit-application-module-filters="true" />
+    <method v="2" />
+  </configuration>
+</component>
