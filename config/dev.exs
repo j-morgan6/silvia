@@ -60,6 +60,8 @@ config :silvia, SilviaWeb.Endpoint,
 config :silvia, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
+# Print only warnings and errors during test
+config :logger, level: :notice
 config :logger, :console, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
