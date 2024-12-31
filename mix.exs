@@ -2,7 +2,7 @@ defmodule Silvia.MixProject do
   use Mix.Project
 
   @app :silvia
-  @version "0.1.1"
+  @version "0.1.2"
   @all_targets [
     :rpi0,
     :rpi3
