@@ -103,7 +103,10 @@ defmodule Silvia.MixProject do
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      web: "cmd scripts/localweb.sh",
+      fw: "cmd scripts/firmware.sh",
+      ldeploy: "cmd scripts/deploy.sh"
     ]
   end
 
