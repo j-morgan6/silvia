@@ -13,7 +13,7 @@ defmodule Silvia.MixProject do
       app: @app,
       name: "Silvia",
       version: @version,
-      elixir: "~> 1.16",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       archives: [nerves_bootstrap: "~> 1.13"],
       compilers: Mix.compilers(),
@@ -45,13 +45,13 @@ defmodule Silvia.MixProject do
   defp deps do
     [
       # Initial pheonix deps
-      {:phoenix, "~> 1.7.2"},
-      {:phoenix_html, "~> 4.0"},
+      {:phoenix, "~> 1.7.10"},
+      {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev, targets: :host},
-      {:phoenix_live_view, "~> 1.0"},
-      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_live_view, "~> 0.20"},
+      {:floki, ">= 0.34.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8"},
-      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
@@ -63,8 +63,8 @@ defmodule Silvia.MixProject do
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
-      {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"},
+      {:jason, "~> 1.4"},
+      {:plug_cowboy, "~> 2.6"},
 
       # Dependencies for all targets
       {:nerves, "~> 1.7.16 or ~> 1.8.0 or ~> 1.9.0 or ~> 1.10.4 or ~> 1.11.0", runtime: false},
@@ -79,7 +79,7 @@ defmodule Silvia.MixProject do
       {:vintage_net_wizard, "~> 0.4"},
 
       # Dependencies for NervesHub
-      {:nerves_hub_link, "~> 2.2"},
+      {:nerves_hub_link, "~> 2.5"},
       {:nerves_hub_cli, "~> 2.0"},
 
       # Dependencies for specific targets
@@ -87,8 +87,8 @@ defmodule Silvia.MixProject do
       # bumps to Nerves systems. Since these include Linux kernel and Erlang
       # version updates, please review their release notes in case
       # changes to your application are needed.
-      {:nerves_system_rpi0, "~> 1.19", runtime: false, targets: :rpi0},
-      {:nerves_system_rpi3, "~> 1.19", runtime: false, targets: :rpi3}
+      {:nerves_system_rpi0, "~> 1.24", runtime: false, targets: :rpi0},
+      {:nerves_system_rpi3, "~> 1.24", runtime: false, targets: :rpi3}
     ]
   end
 
