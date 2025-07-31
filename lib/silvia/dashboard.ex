@@ -56,7 +56,7 @@ defmodule Silvia.Dashboard do
   end
 
   def handle_cast({:wifi_status, {conn, ssid} = _wifi_status}, state) do
-    Logger.info("[#inspect(@me] wifi status: connection #{conn}, ssid #{ssid}")
+    Logger.info("[#{inspect(@me)}] wifi status: connection #{conn}, ssid #{ssid}")
     {:noreply, %{state | wifi_status: conn}}
   end
 
