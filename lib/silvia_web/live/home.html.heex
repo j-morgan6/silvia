@@ -32,7 +32,7 @@
   <div class="set_temperature">
     <h2>Set Brew Temperature</h2>
     <div class="meter">
-      <span style={"width: #{(100-(98-@brew_temperature)*(100/6))}%; background: #F1C40D"}>
+     <span style={"width: #{(@brew_temperature - 88) * 100 / (96 - 88)}%; background: #F1C40D"}>
         { @brew_temperature }C
       </span>
     </div>
@@ -47,7 +47,7 @@
   <div class="set_temperature">
     <h2>Set Steam Temperature</h2>
     <div class="meter">
-      <span style={"width: #{(100-(145-@steam_temperature)*10)}%; background: #99CCFF"}>
+      <span style={"width: #{(@steam_temperature - 135) * 100 / (160 - 135)}%; background: #99CCFF"}>
         { @steam_temperature }C
       </span>
     </div>

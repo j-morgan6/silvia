@@ -6,6 +6,12 @@ defmodule SilviaWeb.Home do
 
   @refresh_frequency 2_000
 
+  #temperature limits
+  @brew_temp_min 88
+  @brew_temp_max 96
+  @steam_temp_min 130
+  @steam_temp_max 160
+
   def mount(_params, _session, socket) do
     if connected?(socket) do
       :timer.send_interval(@refresh_frequency, self(), :tick)
@@ -23,26 +29,30 @@ defmodule SilviaWeb.Home do
   end
 
   def handle_event("brew-down", _, socket) do
-    socket = update(socket, :brew_temperature, &(&1 - 1))
-    Controller.brew_temperature(socket.assigns.brew_temperature)
+    new_temp = max(socket.assigns.brew_temperature - 1, @brew_temp_min)
+    socket = assign(socket, :brew_temperature, new_temp)
+    Controller.brew_temperature(new_temp)
     {:noreply, socket}
   end
 
   def handle_event("brew-up", _, socket) do
-    socket = update(socket, :brew_temperature, &(&1 + 1))
-    Controller.brew_temperature(socket.assigns.brew_temperature)
+    new_temp = min(socket.assigns.brew_temperature + 1, @brew_temp_max)
+    socket = assign(socket, :brew_temperature, new_temp)
+    Controller.brew_temperature(new_temp)
     {:noreply, socket}
   end
 
   def handle_event("steam-down", _, socket) do
-    socket = update(socket, :steam_temperature, &(&1 - 1))
-    Controller.steam_temperature(socket.assigns.steam_temperature)
+    new_temp = max(socket.assigns.steam_temperature - 1, @steam_temp_min)
+    socket = assign(socket, :steam_temperature, new_temp)
+    Controller.steam_temperature(new_temp)
     {:noreply, socket}
   end
 
   def handle_event("steam-up", _, socket) do
-    socket = update(socket, :steam_temperature, &(&1 + 1))
-    Controller.steam_temperature(socket.assigns.steam_temperature)
+    new_temp = min(socket.assigns.steam_temperature + 1, @steam_temp_max)
+    socket = assign(socket, :steam_temperature, new_temp)
+    Controller.steam_temperature(new_temp)
     {:noreply, socket}
   end
 
