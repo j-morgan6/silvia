@@ -1,5 +1,17 @@
 <.page_title title="Dashboard" />
 <.body>
+<div class="wifi-status">
+    <%= cond do %>
+      <% @wifi_status in [:connected, "connected"] -> %>
+        <div class="wifi-connected">
+          <.icon name="hero-wifi" />
+        </div>
+      <% true -> %>
+        <div class="wifi-disconnected">
+          <span class="disconnected-slash">⚡</span>
+        </div>
+    <% end %>
+  </div>
   <div id="dashboard">
     <div class="info">
       <div class="datapoint">
@@ -47,7 +59,7 @@
   <div class="set_temperature">
     <h2>Set Steam Temperature</h2>
     <div class="meter">
-      <span style={"width: #{(@steam_temperature - 135) * 100 / (160 - 135)}%; background: #99CCFF"}>
+      <span style={"width: #{(@steam_temperature - 130) * 100 / (160 - 130)}%; background: #99CCFF"}>
         { @steam_temperature }C
       </span>
     </div>
@@ -57,9 +69,5 @@
     <button phx-click="steam-up">
       <img src="/images/up.svg" />
     </button>
-  </div>
-
-  <div>
-    Wifi Status: { @wifi_status }
   </div>
 </.body>

@@ -35,7 +35,7 @@ defmodule Silvia.Dashboard do
         temperature: Enum.random(94..96),
         brew_temperature: 92,
         steam_temperature: 145,
-        wifi_status: :starting
+        wifi_status: :connected
       }
     }
   end
