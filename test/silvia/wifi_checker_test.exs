@@ -1,5 +1,5 @@
 defmodule Silvia.WifiCheckerTest do
-  use ExUnit.Case
+  use ExUnit.Case , async: true
 
   alias Silvia.WifiChecker
 
