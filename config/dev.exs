@@ -49,6 +49,10 @@ config :silvia, SilviaWeb.Endpoint,
 # Watch static and templates for browser reloading.
 config :silvia, SilviaWeb.Endpoint,
   live_reload: [
+    notify: [
+      ~r"lib/silvia_web/components/core_components.ex$",
+      ~r"lib/silvia_web/(live|components)/.*(ex|heex)$"
+    ],
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
