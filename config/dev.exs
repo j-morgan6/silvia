@@ -3,6 +3,9 @@ import Config
 config :silvia, vintage_net: VintageNet
 config :silvia, vintage_net_wizard: VintageNetWizard
 
+# Do not connect to nerve-hub when in development
+config :nerves_hub_link, connect: false
+
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
