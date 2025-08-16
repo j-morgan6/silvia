@@ -2,7 +2,7 @@
 
 set -e
 
-export MIX_ENV=prod
+export MIX_ENV=dev
 export MIX_TARGET=rpi0
 export HOST=silvia.local
 
