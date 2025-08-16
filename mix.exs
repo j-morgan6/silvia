@@ -2,7 +2,7 @@ defmodule Silvia.MixProject do
   use Mix.Project
 
   @app :silvia
-  @version "0.1.2"
+  @version "0.1.3"
   @all_targets [
     :rpi0,
     :rpi3
@@ -79,7 +79,7 @@ defmodule Silvia.MixProject do
       {:vintage_net_wizard, "~> 0.4"},
 
       # Dependencies for NervesHub
-      {:nerves_hub_link, "~> 2.5"},
+      {:nerves_hub_link, "~> 2.7"},
       {:nerves_hub_cli, "~> 2.0"},
 
       # Dependencies for specific targets
