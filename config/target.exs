@@ -91,8 +91,6 @@ config :mdns_lite,
 ################################################################
 ## NervesHub Config
 ################################################################
-config :nerves_hub_link, remote_iex: true
-
 config :nerves_hub,
   public_keys: [:devkey, :tangokey]
 
