@@ -22,8 +22,7 @@ defmodule Silvia.Hardware.HeatSensor do
       :gpio,                # GPIO reference
       :pin,                # GPIO pin number
       :timer,              # Timer reference for periodic readings
-      :last_reading,       # Last valid temperature reading
-      subscribers: []      # List of subscribed processes
+      :last_reading        # Last valid temperature reading
     ]
   end
 
@@ -37,14 +36,6 @@ defmodule Silvia.Hardware.HeatSensor do
 
   def get_temperature do
     GenServer.call(__MODULE__, :get_temperature)
-  end
-
-  def subscribe(pid \\ self()) do
-    GenServer.call(__MODULE__, {:subscribe, pid})
-  end
-
-  def unsubscribe(pid \\ self()) do
-    GenServer.call(__MODULE__, {:unsubscribe, pid})
   end
 
   # Server Callbacks
@@ -75,24 +66,8 @@ defmodule Silvia.Hardware.HeatSensor do
   end
 
   @impl true
-  def handle_call({:subscribe, pid}, _from, state) do
-    if pid not in state.subscribers do
-      Process.monitor(pid)
-      {:reply, :ok, %{state | subscribers: [pid | state.subscribers]}}
-    else
-      {:reply, :ok, state}
-    end
-  end
-
-  @impl true
-  def handle_call({:unsubscribe, pid}, _from, state) do
-    {:reply, :ok, %{state | subscribers: List.delete(state.subscribers, pid)}}
-  end
-
-  @impl true
   def handle_info(:read_temperature, state) do
     new_reading = read_temperature(state)
-    notify_subscribers(new_reading, state.subscribers)
     schedule_reading()
     {:noreply, %{state | last_reading: new_reading}}
   end
@@ -192,8 +167,4 @@ defmodule Silvia.Hardware.HeatSensor do
     temp >= @temp_offset and temp <= (@temp_offset + @temp_range)
   end
   defp valid_temperature?(_), do: false
-
-  defp notify_subscribers(reading, subscribers) do
-    Enum.each(subscribers, &send(&1, {:temperature_update, reading}))
-  end
 end
