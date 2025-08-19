@@ -22,7 +22,7 @@ defmodule Silvia.Hardware.RelayTest do
       stop_supervised!(Relay)
       assert {:ok, _pid} = Relay.start_link([])
       assert Relay.state() == :off
-      assert %{closed: false, value: 0} == GPIO.state()
+      assert GPIO.state() == %{closed: false, value: 0}
     end
 
     test "starts with custom pin" do
@@ -30,7 +30,7 @@ defmodule Silvia.Hardware.RelayTest do
       custom_pin = 23
       assert {:ok, _pid} = Relay.start_link(pin: custom_pin)
       assert Relay.state() == :off
-      assert %{closed: false, value: 0} == GPIO.state()
+      assert GPIO.state() == %{closed: false, value: 0}
     end
   end
 
@@ -38,17 +38,17 @@ defmodule Silvia.Hardware.RelayTest do
     test "turns on the relay" do
       :ok = Relay.on()
       assert Relay.state() == :on
-      assert %{closed: false, value: 1} == GPIO.state()
+      assert GPIO.state() == %{closed: false, value: 1}
     end
 
     test "turns off the relay" do
       # First turn it on
       :ok = Relay.on()
-      assert %{closed: false, value: 1} == GPIO.state()
+      assert GPIO.state() == %{closed: false, value: 1}
 
       # Then turn it off
       :ok = Relay.off()
-      assert %{closed: false, value: 0} == GPIO.state()
+      assert GPIO.state() == %{closed: false, value: 0}
       assert Relay.state() == :off
     end
 
@@ -87,7 +87,7 @@ defmodule Silvia.Hardware.RelayTest do
     test "closes GPIO on termination" do
       pid = Process.whereis(Relay)
       GenServer.stop(pid)
-      assert %{closed: true, value: 0} == GPIO.state()
+      assert GPIO.state() == %{closed: true, value: 0}
     end
   end
 end

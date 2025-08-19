@@ -40,7 +40,7 @@ defmodule Fake.GPIO do
   end
 
   @impl true
-  def handle_call({:open, pin, direction, opts}, _from, state) do
+  def handle_call({:open, pin, _direction, _opts}, _from, state) do
     {:reply, {:ok, pin}, state}
   end
 
