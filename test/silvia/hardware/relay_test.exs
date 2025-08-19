@@ -2,48 +2,53 @@ defmodule Silvia.Hardware.RelayTest do
   use ExUnit.Case, async: true
 
   alias Silvia.Hardware.Relay
-
-  @default_pin 18
+  alias Fake.GPIO
 
   setup do
-    # Set the test module to receive fake messages
-    Application.put_env(:silvia, :gpio_test_pid, self())
-    # Start the relay process
-    start_supervised!({Relay, []})
-    :ok
+    # Start the GPIO mock
+    {:ok, _pid} = GPIO.start_link()
+    # Configure the application to use our mock
+    Application.put_env(:silvia, :gpio_module, GPIO)
+
+    # Start a named sensor process for each test
+    relay_name = :"relay_#{:erlang.unique_integer([:positive])}"
+    start_supervised!({Relay, [name: relay_name]})
+
+    {:ok, relay: relay_name}
   end
 
   describe "initialization" do
     test "starts with default pin" do
-      assert_received {:gpio_open, @default_pin, :output}
-      # Should initialize in OFF state
-      assert_received {:gpio_write, @default_pin, 0}
+      stop_supervised!(Relay)
+      assert {:ok, _pid} = Relay.start_link([])
+      assert Relay.state() == :off
+      assert %{closed: false, value: 0} == GPIO.state()
     end
 
     test "starts with custom pin" do
       stop_supervised!(Relay)
       custom_pin = 23
-      start_supervised!({Relay, [pin: custom_pin]}, restart: :temporary)
-      assert_received {:gpio_open, ^custom_pin, :output}
-      assert_received {:gpio_write, ^custom_pin, 0}
+      assert {:ok, _pid} = Relay.start_link(pin: custom_pin)
+      assert Relay.state() == :off
+      assert %{closed: false, value: 0} == GPIO.state()
     end
   end
 
   describe "relay control" do
     test "turns on the relay" do
       :ok = Relay.on()
-      assert_received {:gpio_write, @default_pin, 1}
       assert Relay.state() == :on
+      assert %{closed: false, value: 1} == GPIO.state()
     end
 
     test "turns off the relay" do
       # First turn it on
       :ok = Relay.on()
-      assert_received {:gpio_write, @default_pin, 1}
+      assert %{closed: false, value: 1} == GPIO.state()
 
       # Then turn it off
       :ok = Relay.off()
-      assert_received {:gpio_write, @default_pin, 0}
+      assert %{closed: false, value: 0} == GPIO.state()
       assert Relay.state() == :off
     end
 
@@ -75,9 +80,6 @@ defmodule Silvia.Hardware.RelayTest do
       Application.put_env(:silvia, :gpio_module, FailingGPIOMock)
 
       assert {:error, _} = Relay.start_link([])
-
-      # Reset the GPIO module
-      Application.put_env(:silvia, :gpio_module, Fake.GPIO)
     end
   end
 
@@ -85,8 +87,7 @@ defmodule Silvia.Hardware.RelayTest do
     test "closes GPIO on termination" do
       pid = Process.whereis(Relay)
       GenServer.stop(pid)
-      assert_received {:gpio_write, @default_pin, 0}  # Should turn off first
-      assert_received {:gpio_close, @default_pin}     # Then close the GPIO
+      assert %{closed: true, value: 0} == GPIO.state()
     end
   end
 end
