@@ -78,7 +78,8 @@ defmodule Silvia.Hardware.HeatSensor do
 
   @impl true
   def terminate(_reason, state) do
-    if state.gpio, do: state.gpio.close(state.gpio)
+    gpio_mod = Application.get_env(:silvia, :gpio_module, Circuits.GPIO)
+    if state.gpio, do: gpio_mod.close(state.gpio)
     :ok
   end
 
@@ -88,60 +89,64 @@ defmodule Silvia.Hardware.HeatSensor do
     Process.send_after(self(), :read_temperature, @sample_interval)
   end
 
-  defp read_temperature(%{gpio: gpio}) do
-    case read_raw_data(gpio) do
+  def read_temperature(%{gpio: gpio}) do
+    gpio_mod = Application.get_env(:silvia, :gpio_module, Circuits.GPIO)
+    case read_raw_data(gpio_mod, gpio) do
       {:ok, raw_value} ->
+        Debug.print(raw_value, "raw_value in read_temperature")
         temp = convert_to_celsius(raw_value)
+        Debug.print(temp, "temp in read_temperature")
         if valid_temperature?(temp), do: {:ok, temp}, else: {:error, :invalid_reading}
       error -> error
     end
   end
 
-  defp read_raw_data(gpio) do
-    with :ok <- wait_for_start(gpio),
-         {:ok, bits} <- read_bits(gpio) do
+  def read_raw_data(gpio_mod, gpio) do
+    with :ok <- wait_for_start(gpio_mod, gpio),
+         {:ok, bits} <- read_bits(gpio_mod, gpio) do
       {:ok, bits_to_value(bits)}
     end
   end
 
-  defp wait_for_start(gpio) do
+  defp wait_for_start(gpio_mod, gpio) do
     start_time = System.monotonic_time(:millisecond)
-    wait_for_falling_edge(gpio, start_time)
+    wait_for_falling_edge(gpio_mod, gpio, start_time)
   end
 
-  defp wait_for_falling_edge(gpio, start_time) do
-    case gpio.read(gpio) do
+  defp wait_for_falling_edge(gpio_mod, gpio, start_time) do
+    case gpio_mod.read(gpio) do
       0 -> :ok
       1 ->
         if System.monotonic_time(:millisecond) - start_time > @timeout do
           {:error, :timeout}
         else
           Process.sleep(1)
-          wait_for_falling_edge(gpio, start_time)
+          wait_for_falling_edge(gpio_mod, gpio, start_time)
         end
       {:error, reason} -> {:error, reason}
     end
   end
 
-  defp read_bits(gpio) do
+  defp read_bits(gpio_mod, gpio) do
     try do
       bits = for _bit <- 1..@bit_count do
-        case read_single_bit(gpio) do
+        case read_single_bit(gpio_mod, gpio) do
           {:ok, bit} -> bit
           error -> throw(error)
         end
       end
+      Debug.print(bits, "bits in read_bits")
       {:ok, bits}
     catch
       error -> error
     end
   end
 
-  defp read_single_bit(gpio) do
+  defp read_single_bit(gpio_mod, gpio) do
     # Wait for half the bit frame
     :timer.sleep(@half_frame_us)
 
-    case gpio.read(gpio) do
+    case gpio_mod.read(gpio) do
       bit when bit in [0, 1] ->
         # Wait for the remaining half frame
         :timer.sleep(@half_frame_us)
