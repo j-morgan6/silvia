@@ -1,12 +1,12 @@
 defmodule Silvia.Hardware.RelayTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   alias Silvia.Hardware.Relay
   alias Fake.GPIO
 
   setup do
     # Start the GPIO mock
-    {:ok, _pid} = GPIO.start_link()
+    start_supervised!(GPIO)
     # Configure the application to use our mock
     Application.put_env(:silvia, :gpio_module, GPIO)
 
