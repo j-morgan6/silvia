@@ -16,7 +16,7 @@ defmodule Silvia.MixProject do
       elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       archives: [nerves_bootstrap: "~> 1.13"],
-      compilers: Mix.compilers(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
@@ -48,8 +48,8 @@ defmodule Silvia.MixProject do
       {:phoenix, "~> 1.7.10"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev, targets: :host},
-      {:phoenix_live_view, "~> 1.0.17"},
-      {:floki, ">= 0.34.0", only: :test},
+      {:phoenix_live_view, "~> 1.1"},
+      {:lazy_html, ">= 0.0.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
@@ -72,6 +72,7 @@ defmodule Silvia.MixProject do
       {:ring_logger, "~> 0.11.0"},
       {:toolshed, "~> 0.4.0"},
       {:circuits_gpio, "~> 2.1"},
+      {:micro_timer, "~> 0.1.0"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.13.0"},
