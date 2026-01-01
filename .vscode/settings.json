@@ -1,0 +1,5 @@
+{
+  "elixirLS.mixEnv": "dev",
+  "elixirLS.mixTarget": "host",
+  "elixirLS.projectDir": ""
+}

@@ -15,15 +15,18 @@ defmodule Silvia.MixProject do
       version: @version,
       elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
-      archives: [nerves_bootstrap: "~> 1.13"],
+      archives: [nerves_bootstrap: "~> 1.14"],
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      releases: [{@app, release()}],
-      preferred_cli_target: [run: :host, test: :host]
+      releases: [{@app, release()}]
     ]
   end
+
+  def cli do
+      [preferred_targets: [run: :host, test: :host]]
+    end
 
   # Configuration for the OTP application.
   #
@@ -71,7 +74,7 @@ defmodule Silvia.MixProject do
       {:shoehorn, "~> 0.9.1"},
       {:ring_logger, "~> 0.11.0"},
       {:toolshed, "~> 0.4.0"},
-      {:circuits_gpio, "~> 2.1"},
+      {:circuits_gpio, "~> 2.1.3"},
       {:micro_timer, "~> 0.1.0"},
 
       # Dependencies for all targets except :host
