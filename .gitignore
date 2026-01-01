@@ -43,3 +43,6 @@ silvia.iml
 
 # removing the generated assets
 *.gz
+
+# Stride API authentication (contains secrets)
+.stride_auth.md
