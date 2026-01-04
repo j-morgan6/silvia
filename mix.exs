@@ -77,6 +77,9 @@ defmodule Silvia.MixProject do
       {:circuits_gpio, "~> 2.1.3"},
       {:micro_timer, "~> 0.1.0"},
 
+      # Dev/Test dependencies
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.13.0"},
       {:nerves_pack, "~> 0.7.0", targets: @all_targets},
