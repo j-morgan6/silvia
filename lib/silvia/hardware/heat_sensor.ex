@@ -10,11 +10,11 @@ defmodule Silvia.Hardware.HeatSensor do
   # Constants for TSIC306
   @sample_interval 1_000      # Read interval in ms
   @bit_count 20              # Total number of bits in a reading
-  @half_frame_us 62          # Half of the bit frame for sampling
   @max_raw_value 2047       # Maximum raw value (2^11 - 1)
   @temp_range 200.0         # Temperature range in Celsius (-50 to +150)
   @temp_offset -50.0        # Temperature offset in Celsius
   @timeout 1000             # Timeout for waiting for sensor response in ms
+  # Note: @half_frame_us removed - now measured dynamically as Tstrobe
 
   defmodule State do
     defstruct [
@@ -103,7 +103,9 @@ defmodule Silvia.Hardware.HeatSensor do
 
   def read_raw_data(gpio_mod, gpio) do
     with :ok <- wait_for_start(gpio_mod, gpio),
-         {:ok, bits} <- read_bits(gpio_mod, gpio) do
+         {:ok, tstrobe} <- measure_start_bit_strobe(gpio_mod, gpio),
+         {:ok, bits} <- read_bits(gpio_mod, gpio, tstrobe) do
+      Debug.print(tstrobe, "measured Tstrobe (μs)")
       {:ok, bits_to_value(bits)}
     end
   end
@@ -127,10 +129,55 @@ defmodule Silvia.Hardware.HeatSensor do
     end
   end
 
-  defp read_bits(gpio_mod, gpio) do
+  # Measure Tstrobe from start bit (50% duty cycle)
+  # Start bit: falling edge -> wait -> rising edge
+  # Tstrobe = time from falling to rising edge (~62.5 μs nominal)
+  defp measure_start_bit_strobe(gpio_mod, gpio) do
+    # Wait for falling edge of start bit
+    with :ok <- wait_for_edge(gpio_mod, gpio, 0) do
+      # Start timing at falling edge
+      start_time = System.monotonic_time(:microsecond)
+
+      # Wait for rising edge
+      case wait_for_edge(gpio_mod, gpio, 1) do
+        :ok ->
+          # Calculate Tstrobe duration
+          tstrobe = System.monotonic_time(:microsecond) - start_time
+          {:ok, tstrobe}
+        error -> error
+      end
+    end
+  end
+
+  # Wait for GPIO to reach target value (0 or 1)
+  defp wait_for_edge(gpio_mod, gpio, target_value) do
+    start_time = System.monotonic_time(:millisecond)
+    wait_for_edge_loop(gpio_mod, gpio, target_value, start_time)
+  end
+
+  defp wait_for_edge_loop(gpio_mod, gpio, target_value, start_time) do
+    case gpio_mod.read(gpio) do
+      {:error, reason} ->
+        {:error, reason}
+      ^target_value ->
+        :ok
+      _ ->
+        if System.monotonic_time(:millisecond) - start_time > @timeout do
+          {:error, :timeout}
+        else
+          # Busy wait for microsecond precision
+          wait_for_edge_loop(gpio_mod, gpio, target_value, start_time)
+        end
+    end
+  end
+
+  # Read bits using measured Tstrobe for sampling timing
+  defp read_bits(gpio_mod, gpio, tstrobe) do
     try do
-      bits = for _bit <- 1..@bit_count do
-        case read_single_bit(gpio_mod, gpio) do
+      # Read 19 remaining bits (after start bit already consumed)
+      # Note: This is still reading 20 bits total - will need packet structure later
+      bits = for _bit <- 1..(@bit_count - 1) do
+        case read_single_bit(gpio_mod, gpio, tstrobe) do
           {:ok, bit} -> bit
           error -> throw(error)
         end
@@ -142,16 +189,30 @@ defmodule Silvia.Hardware.HeatSensor do
     end
   end
 
-  defp read_single_bit(gpio_mod, gpio) do
-    # Wait for half the bit frame
-    :timer.sleep(@half_frame_us)
+  # Read a single bit using ZACWire duty cycle encoding
+  # Sample at Tstrobe after falling edge to detect duty cycle
+  defp read_single_bit(gpio_mod, gpio, tstrobe) do
+    # Wait for falling edge of next bit
+    with :ok <- wait_for_edge(gpio_mod, gpio, 0) do
+      # Wait Tstrobe duration (busy-wait for microsecond precision)
+      target_time = System.monotonic_time(:microsecond) + tstrobe
+      busy_wait_until(target_time)
 
-    case gpio_mod.read(gpio) do
-      bit when bit in [0, 1] ->
-        # Wait for the remaining half frame
-        :timer.sleep(@half_frame_us)
-        {:ok, bit}
-      error -> {:error, error}
+      # Sample GPIO at middle of bit window
+      # 75% duty cycle: signal is HIGH -> bit = 1
+      # 25% duty cycle: signal is LOW -> bit = 0
+      case gpio_mod.read(gpio) do
+        bit when bit in [0, 1] -> {:ok, bit}
+        {:error, reason} -> {:error, reason}
+      end
+    end
+  end
+
+  # Busy-wait until target time (microsecond precision)
+  # Note: This blocks the BEAM scheduler but necessary for protocol timing
+  defp busy_wait_until(target_time) do
+    if System.monotonic_time(:microsecond) < target_time do
+      busy_wait_until(target_time)
     end
   end
 
