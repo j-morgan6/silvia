@@ -13,6 +13,7 @@ defmodule Silvia.Hardware.HeatSensor do
   @temp_range 200.0         # Temperature range in Celsius (-50 to +150)
   @temp_offset -50.0        # Temperature offset in Celsius
   @timeout 1000             # Timeout for waiting for sensor response in ms
+  @max_tstrobe 200          # Maximum valid Tstrobe in microseconds (~150μs with safety margin)
   # Note: @half_frame_us removed - now measured dynamically as Tstrobe
 
   defmodule State do
@@ -95,8 +96,33 @@ defmodule Silvia.Hardware.HeatSensor do
         Debug.print(raw_value, "raw_value in read_temperature")
         temp = convert_to_celsius(raw_value)
         Debug.print(temp, "temp in read_temperature")
-        if valid_temperature?(temp), do: {:ok, temp}, else: {:error, :invalid_reading}
-      error -> error
+
+        if valid_temperature?(temp) do
+          {:ok, temp}
+        else
+          Logger.warning("Invalid temperature reading: #{temp}°C from raw value: #{raw_value}")
+          {:error, :invalid_reading}
+        end
+
+      {:error, :timeout} ->
+        Logger.error("Sensor timeout: no response after #{@timeout}ms")
+        {:error, :sensor_timeout}
+
+      {:error, :parity_error_packet1} = error ->
+        Logger.warning("Parity check failed on packet 1")
+        error
+
+      {:error, :parity_error_packet2} = error ->
+        Logger.warning("Parity check failed on packet 2")
+        error
+
+      {:error, :timing_error} = error ->
+        Logger.error("Timing error: Tstrobe exceeded maximum threshold")
+        error
+
+      {:error, reason} = error ->
+        Logger.error("Sensor read failed: #{inspect(reason)}")
+        error
     end
   end
 
@@ -146,8 +172,17 @@ defmodule Silvia.Hardware.HeatSensor do
         :ok ->
           # Calculate Tstrobe duration
           tstrobe = System.monotonic_time(:microsecond) - start_time
-          {:ok, tstrobe}
-        error -> error
+
+          # Validate Tstrobe is within reasonable bounds
+          if tstrobe > @max_tstrobe do
+            Logger.error("Tstrobe overflow: #{tstrobe}μs exceeds maximum #{@max_tstrobe}μs")
+            {:error, :timing_error}
+          else
+            {:ok, tstrobe}
+          end
+
+        error ->
+          error
       end
     end
   end
