@@ -9,7 +9,6 @@ defmodule Silvia.Hardware.HeatSensor do
 
   # Constants for TSIC306
   @sample_interval 1_000      # Read interval in ms
-  @bit_count 20              # Total number of bits in a reading
   @max_raw_value 2047       # Maximum raw value (2^11 - 1)
   @temp_range 200.0         # Temperature range in Celsius (-50 to +150)
   @temp_offset -50.0        # Temperature offset in Celsius
