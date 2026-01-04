@@ -104,9 +104,13 @@ defmodule Silvia.Hardware.HeatSensor do
   def read_raw_data(gpio_mod, gpio) do
     with :ok <- wait_for_start(gpio_mod, gpio),
          {:ok, tstrobe} <- measure_start_bit_strobe(gpio_mod, gpio),
-         {:ok, bits} <- read_bits(gpio_mod, gpio, tstrobe) do
+         {:ok, packet1} <- read_packet(gpio_mod, gpio, tstrobe, 1),
+         :ok <- wait_for_stop_bit(gpio_mod, gpio),
+         {:ok, packet2} <- read_packet(gpio_mod, gpio, tstrobe, 2) do
       Debug.print(tstrobe, "measured Tstrobe (μs)")
-      {:ok, bits_to_value(bits)}
+      Debug.print(packet1, "packet1 data bits")
+      Debug.print(packet2, "packet2 data bits")
+      {:ok, assemble_temperature(packet1, packet2)}
     end
   end
 
@@ -171,22 +175,69 @@ defmodule Silvia.Hardware.HeatSensor do
     end
   end
 
-  # Read bits using measured Tstrobe for sampling timing
-  defp read_bits(gpio_mod, gpio, tstrobe) do
+  # Read a single packet (10 bits: 1 start + 8 data + 1 parity)
+  # Returns {:ok, data_bits} if parity is valid, or {:error, :parity_error}
+  defp read_packet(gpio_mod, gpio, tstrobe, packet_num) do
     try do
-      # Read 19 remaining bits (after start bit already consumed)
-      # Note: This is still reading 20 bits total - will need packet structure later
-      bits = for _bit <- 1..(@bit_count - 1) do
+      # Read 9 bits after start bit (8 data + 1 parity)
+      bits = for _bit <- 1..9 do
         case read_single_bit(gpio_mod, gpio, tstrobe) do
           {:ok, bit} -> bit
           error -> throw(error)
         end
       end
-      Debug.print(bits, "bits in read_bits")
-      {:ok, bits}
+
+      # Split into data bits and parity bit
+      data_bits = Enum.take(bits, 8)
+      parity_bit = Enum.at(bits, 8)
+
+      # Validate even parity
+      if check_even_parity(data_bits, parity_bit) do
+        {:ok, data_bits}
+      else
+        Logger.error("Parity error in packet #{packet_num}")
+        {:error, :"parity_error_packet#{packet_num}"}
+      end
     catch
       error -> error
     end
+  end
+
+  # Wait for stop bit (signal HIGH for one bit window) between packets
+  defp wait_for_stop_bit(gpio_mod, gpio) do
+    # Wait for signal to go HIGH
+    case wait_for_edge(gpio_mod, gpio, 1) do
+      :ok -> :ok
+      error -> error
+    end
+  end
+
+  # Check even parity: count of 1s in (data_bits + parity_bit) should be even
+  defp check_even_parity(data_bits, parity_bit) do
+    ones_count = Enum.count(data_bits, &(&1 == 1))
+    total_ones = ones_count + parity_bit
+    rem(total_ones, 2) == 0
+  end
+
+  # Assemble 11-bit temperature from two 8-bit packets
+  # Packet 1 bits [5,6,7] = T[10,9,8] (high 3 bits)
+  # Packet 2 bits [0..7] = T[7..0] (low 8 bits)
+  defp assemble_temperature(packet1_data, packet2_data) do
+    # Extract high 3 bits from packet 1 (positions 5, 6, 7)
+    t10 = Enum.at(packet1_data, 5)
+    t9 = Enum.at(packet1_data, 6)
+    t8 = Enum.at(packet1_data, 7)
+    high_bits = (t10 <<< 2) ||| (t9 <<< 1) ||| t8
+
+    # Extract low 8 bits from packet 2 (positions 0..7)
+    low_bits = packet2_data
+      |> Enum.with_index()
+      |> Enum.reduce(0, fn {bit, index}, acc ->
+        acc ||| (bit <<< (7 - index))
+      end)
+
+    # Combine into 11-bit temperature value
+    (high_bits <<< 8) ||| low_bits
   end
 
   # Read a single bit using ZACWire duty cycle encoding
@@ -214,14 +265,6 @@ defmodule Silvia.Hardware.HeatSensor do
     if System.monotonic_time(:microsecond) < target_time do
       busy_wait_until(target_time)
     end
-  end
-
-  defp bits_to_value(bits) do
-    bits
-    |> Enum.with_index()
-    |> Enum.reduce(0, fn {bit, index}, acc ->
-      acc ||| (bit <<< (@bit_count - 1 - index))
-    end)
   end
 
   defp convert_to_celsius(raw_value) do
