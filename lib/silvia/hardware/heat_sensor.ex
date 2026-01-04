@@ -167,8 +167,7 @@ defmodule Silvia.Hardware.HeatSensor do
     (raw_value / @max_raw_value * @temp_range) + @temp_offset
   end
 
-  defp valid_temperature?(temp) when is_number(temp) do
+  defp valid_temperature?(temp) do
     temp >= @temp_offset and temp <= (@temp_offset + @temp_range)
   end
-  defp valid_temperature?(_), do: false
 end
