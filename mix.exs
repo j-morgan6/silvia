@@ -13,7 +13,7 @@ defmodule Silvia.MixProject do
       app: @app,
       name: "Silvia",
       version: @version,
-      elixir: "~> 1.18",
+      elixir: "~> 1.17",
       elixirc_paths: elixirc_paths(Mix.env()),
       archives: [nerves_bootstrap: "~> 1.14"],
       compilers: [:phoenix_live_view] ++ Mix.compilers(),

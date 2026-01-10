@@ -35,8 +35,10 @@ defmodule Silvia.WifiWizard do
   end
 
   def ssid() do
-    [network | _] = networks()
-    network.ssid
+    case networks() do
+      [network | _] -> network.ssid
+      [] -> "No network"
+    end
   end
 
   defp check_config() do
@@ -77,7 +79,10 @@ defmodule Silvia.WifiWizard do
   end
 
   defp networks() do
-    vintage_net().get_configuration(@ifname).vintage_net_wifi.networks
+    case vintage_net().get_configuration(@ifname) do
+      %{vintage_net_wifi: %{networks: networks}} -> networks
+      _ -> []
+    end
   end
 
   defp connection() do
