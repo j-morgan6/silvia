@@ -3,6 +3,7 @@ defmodule Silvia.BoilerTemperature do
   require Logger
 
   alias Silvia.Controller
+  alias Silvia.Hardware.TemperatureSensor
 
   @me __MODULE__
   @frequency 1_000
@@ -18,14 +19,22 @@ defmodule Silvia.BoilerTemperature do
   end
 
   def handle_info(:check_temperature, :ok) do
-    boiler_temperature = boiler_temperature()
     Process.send_after(self(), :check_temperature, @frequency)
-    Controller.temperature(boiler_temperature)
+
+    case read_sensor_temperature() do
+      {:ok, temp} ->
+        Controller.temperature(temp)
+
+      {:error, reason} ->
+        Logger.warning("[#{inspect(@me)}] Failed to read temperature: #{inspect(reason)}")
+    end
+
     {:noreply, :ok}
   end
 
-  defp boiler_temperature() do
-    # TODO: Replace with Silvia.Hardware.TemperatureSensor.read_temperature() (W24)
-    Enum.random(92..145)
+  defp read_sensor_temperature do
+    TemperatureSensor.read_temperature()
+  catch
+    :exit, _ -> {:error, :sensor_not_available}
   end
 end

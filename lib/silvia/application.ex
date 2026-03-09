@@ -25,11 +25,11 @@ defmodule Silvia.Application do
         # {Silvia.Worker, arg}
 
         Silvia.Controller,
-        Silvia.WifiChecker,
-        # TODO: Replace with Silvia.Hardware.TemperatureSensor (W22)
+        Silvia.WifiChecker
+      ] ++ children(target()) ++ [
         Silvia.BoilerTemperature,
         Silvia.Dashboard
-      ] ++ children(target())
+      ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -49,9 +49,7 @@ defmodule Silvia.Application do
 
   def children(_target) do
     [
-      # Children for all targets except host
-      # Starts a worker by calling: Silvia.Worker.start_link(arg)
-      # {Silvia.Worker, arg},
+      Silvia.Hardware.TemperatureSensor
     ]
   end
 
