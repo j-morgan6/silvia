@@ -26,7 +26,7 @@ defmodule Silvia.Application do
 
         Silvia.Controller,
         Silvia.WifiChecker,
-        Silvia.Hardware.HeatSensor,
+        # TODO: Replace with Silvia.Hardware.TemperatureSensor (W22)
         Silvia.BoilerTemperature,
         Silvia.Dashboard
       ] ++ children(target())

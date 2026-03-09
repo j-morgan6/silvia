@@ -25,8 +25,8 @@ defmodule Silvia.MixProject do
   end
 
   def cli do
-      [preferred_targets: [run: :host, test: :host]]
-    end
+    [preferred_targets: [run: :host, test: :host]]
+  end
 
   # Configuration for the OTP application.
   #
@@ -75,6 +75,7 @@ defmodule Silvia.MixProject do
       {:ring_logger, "~> 0.11.0"},
       {:toolshed, "~> 0.4.0"},
       {:circuits_gpio, "~> 2.1.3"},
+      {:circuits_spi, "~> 2.0"},
       {:micro_timer, "~> 0.1.0"},
 
       # Dev/Test dependencies

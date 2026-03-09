@@ -25,13 +25,7 @@ defmodule Silvia.BoilerTemperature do
   end
 
   defp boiler_temperature() do
-    case Silvia.Hardware.HeatSensor.get_temperature() do
-      {:ok, temp} ->
-        Logger.info("[#{inspect(@me)}] ✓ TSIC306 reading: #{Float.round(temp, 2)}°C")
-        temp
-      {:error, reason} ->
-        Logger.error("[#{inspect(@me)}] ✗ TSIC306 FAILED: #{inspect(reason)} - Check GPIO 4 wiring")
-        Enum.random(92..145)
-    end
+    # TODO: Replace with Silvia.Hardware.TemperatureSensor.read_temperature() (W24)
+    Enum.random(92..145)
   end
 end
