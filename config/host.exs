@@ -6,6 +6,9 @@ config :vintage_net,
   persistence: VintageNet.Persistence.Null,
   bin_ip: "false"
 
+# Use fake SPI on host (no hardware available)
+config :silvia, :spi_module, Fake.SPI
+
 ################################################################
 ## NervesHub Config
 ################################################################

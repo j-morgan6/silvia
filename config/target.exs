@@ -2,6 +2,7 @@ import Config
 
 config :silvia, vintage_net: VintageNet
 config :silvia, vintage_net_wizard: VintageNetWizard
+config :silvia, :spi_module, Circuits.SPI
 
 config :silvia, SilviaWeb.Endpoint,
   # Code Reloader and watchers cannot be used on target
