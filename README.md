@@ -39,14 +39,17 @@ You can burn the first image with the following commands:
 ```
 
 
+Hardware
+---
+
+* **Temperature Sensor:** PT100 RTD via MAX31865 SPI converter (3-wire, one-shot mode)
+* **Relay:** RA2425-D06 solid state relay for heating element control
+
 Roadmap
 ---
 
 The next few steps are:
-* Get the heat sensor (TSIC 306) working so we can detect the heat of the boiler
-* Introduce the relay to control the heating element (get it working)
-* Introduce the PID (pid_controller) library and understand how it works
+* Implement the PID controller for boiler temperature
 * Insulate the boiler on the physical machine
-* Implement the PID
 * Work on the UI for the Dashboard
  
